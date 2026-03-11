@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AI Contract Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#0f172a;
+color:white;
+margin:0;
+}
+
+.header{
+text-align:center;
+padding:20px;
+font-size:28px;
+color:#38bdf8;
+}
+
+.container{
+width:90%;
+margin:auto;
+}
+
+.cards{
+display:flex;
+gap:40px;
+justify-content:center;
+margin-bottom:40px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+width:200px;
+text-align:center;
+}
+
+.risk-badge{
+padding:8px 20px;
+border-radius:20px;
+}
+
+.high-risk{background:#ef4444;}
+.medium-risk{background:#f59e0b;}
+.low-risk{background:#22c55e;}
+
+.section{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+margin-bottom:30px;
+}
+
+.highlight{
+background:yellow;
+color:black;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+AI Smart Contract Risk Dashboard
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h3>Risk Level</h3>
+<p id="riskLevel" class="risk-badge">--</p>
+</div>
+
+<div class="card">
+<h3>Risk Score</h3>
+<p id="riskScore">--</p>
+</div>
+
+</div>
+
+
+<div class="section">
+
+<h3>Risk Score Visualization</h3>
+
+<canvas id="riskChart"></canvas>
+
+</div>
+
+
+<div class="section">
+
+<h3>Clause Distribution</h3>
+
+<canvas id="clauseChart"></canvas>
+
+</div>
+
+
+<div class="section">
+
+<h3>AI Risk Explanation</h3>
+
+<div id="explanation"></div>
+
+</div>
+
+
+<div class="section">
+
+<h3>Contract Text Analysis</h3>
+
+<div id="contractText"></div>
+
+</div>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
