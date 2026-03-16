@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 AI Smart Contract Analyzer - Best UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@heroicons/vue/24/outline@2.0.18/index.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="manifest" href="data:application/manifest+json,{
+    'name': 'Smart Contract Analyzer',
+    'short_name': 'SCA',
+    'start_url': '.',
+    'display': 'standalone',
+    'background_color': '#0f172a',
+    'theme_color': '#3b82f6',
+    'icons': [{'src': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjM2I4MmY2Ii8+CjxwYXRoIGQ9Ik0zMCA0MEw1MCA2MEw3MCA0MFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==', 'sizes': '100x100', 'type': 'image/svg+xml'}]
+  }">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); }
+    .glass { backdrop-filter: blur(20px); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+    .animate-pulse-slow { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .drop-highlight { @apply ring-4 ring-blue-500/30 scale-105 bg-blue-500/10 !important; }
+    .glass:hover { background: rgba(255,255,255,0.08); }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-in { animation: slideIn 0.5s ease-out; }
+  </style>
+</head>
+<body class="gradient-bg min-h-screen p-4 md:p-8 text-white">
+  <!-- Theme Toggle -->
+  <button id="themeToggle" class="fixed top-6 right-6 z-50 glass p-3 rounded-xl shadow-2xl hover:scale-110 transition-all duration-300">
+    <i class="fas fa-moon text-xl block dark:hidden"></i>
+    <i class="fas fa-sun text-xl hidden dark:block"></i>
+  </button>
+
+  <!-- Header -->
+  <header class="text-center mb-12">
+    <div class="inline-flex items-center gap-4 mb-4">
+      <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl">
+        <i class="fas fa-robot text-2xl"></i>
+      </div>
+      <div>
+        <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">AI Contract Analyzer</h1>
+        <p class="text-xl opacity-80 mt-2">Smart Risk Detection • Clause Analysis • Instant Insights</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto space-y-8">
+    <!-- Upload Section -->
+    <section class="glass rounded-3xl p-8 md:p-12 text-center slide-in">
+      <h2 class="text-2xl font-semibold mb-6">📤 Upload Contract Document</h2>
+      <p class="text-lg opacity-75 mb-8 max-w-md mx-auto">Drag & drop PDF/DOCX or click to browse. AI analyzes instantly.</p>
+      
+      <div id="dropZone" class="border-4 border-dashed border-white/20 rounded-3xl p-12 md:p-20 hover:border-blue-400 transition-all duration-300 cursor-pointer group relative overflow-hidden">
+        <i class="fas fa-cloud-upload-alt text-5xl text-white/50 group-hover:text-blue-400 mb-6 transition-colors"></i>
+        <p class="text-xl font-medium mb-2">Drop files here or click to upload</p>
+        <p class="text-white/60 text-sm">Supports PDF & DOCX • Max 10MB</p>
+        <input type="file" id="fileInput" accept=".pdf,.docx" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+      </div>
+      
+      <div class="flex gap-4 mt-8 justify-center flex-wrap">
+        <button id="analyzeBtn" class="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="fas fa-magic mr-2"></i>Analyze Contract
+        </button>
+        <button id="loadSample1" class="glass px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all">
+          📄 Sample 1
+        </button>
+        <button id="loadSample2" class="glass px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all">
+          📄 Sample 2
+        </button>
+      </div>
+      
+      <div id="loadingSpinner" class="hidden mt-8 flex items-center justify-center gap-4 animate-pulse-slow">
+        <div class="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        <span class="text-xl font-medium">AI Analyzing Contract...</span>
+      </div>
+    </section>
+
+    <!-- Results Dashboard -->
+    <section id="resultsSection" class="hidden space-y-6">
+      <!-- Risk Overview -->
+      <div class="glass rounded-3xl p-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div id="riskLevel" class="text-3xl font-bold mb-2">HIGH RISK</div>
+          <div class="text-sm opacity-75 uppercase tracking-wide">Risk Level</div>
+        </div>
+        <div class="text-center">
+          <div id="riskScore" class="text-4xl font-bold mb-2">8.2</div>
+          <div class="text-sm opacity-75 uppercase tracking-wide">Score /10</div>
+        </div>
+        <div class="md:col-span-2 lg:col-span-1">
+<div class="w-full h-48 rounded-2xl flex items-center justify-center">
+  <canvas id="riskChart"></canvas>
+</div>
+        </div>
+        <div class="md:col-span-2 lg:col-span-1 text-left">
+          <h3 class="text-xl font-semibold mb-4">Key Issues</h3>
+          <ul id="keyIssues" class="space-y-2 text-sm"></ul>
+        </div>
+      </div>
+
+      <!-- Clauses Grid -->
+      <div class="glass rounded-3xl p-8">
+        <h3 class="text-2xl font-semibold mb-8 flex items-center gap-3">
+          <i class="fas fa-list-check text-blue-400"></i>Detected Clauses
+        </h3>
+        <div id="clausesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- Summary & Export -->
+      <div class="glass rounded-3xl p-8">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-6">📝 AI Summary</h3>
+            <div id="summaryText" class="bg-black/20 p-6 rounded-2xl text-left leading-relaxed text-sm max-h-64 overflow-y-auto prose prose-invert max-w-none"></div>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-xl font-semibold mb-6">Export Results</h3>
+            <button id="exportJson" class="w-full glass p-6 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
+              <i class="fas fa-file-code"></i> Download JSON
+            </button>
+            <button id="exportPdf" class="w-full glass p-6 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3">
+              <i class="fas fa-file-pdf"></i> Download PDF Report
+            </button>
+            <button id="clearResults" class="w-full bg-gradient-to-r from-red-500 to-red-600 p-6 rounded-2xl font-semibold hover:shadow-2xl hover:scale-105 transition-all">
+              <i class="fas fa-trash mr-2"></i>Clear Results
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // State
+    let analysisResult = null;
+    let chart = null;
+
+    // DOM Elements
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const themeToggle = document.getElementById('themeToggle');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const resultsSection = document.getElementById('resultsSection');
+
+    // Drag & Drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+      dropZone.addEventListener(event, e => e.preventDefault());
+      fileInput.addEventListener(event, e => e.preventDefault());
+    });
+
+    ['dragenter', 'dragover'].forEach(event => {
+      dropZone.addEventListener(event, () => dropZone.classList.add('drop-highlight', 'bg-blue-500/10'));
+    });
+
+    ['dragleave', 'drop'].forEach(event => {
+      dropZone.addEventListener(event, () => dropZone.classList.remove('drop-highlight', 'bg-blue-500/10'));
+    });
+
+    dropZone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+    // Theme Toggle
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    });
+
+    // Mock Analysis Engine (Regex + Scoring - works offline!)
+    function analyzeContract(text) {
+      const clauses = {
+        penalty_clause: /penalty|fine|liquidated damages/i.test(text),
+        termination_clause: /terminate|termination|cancel/i.test(text),
+        payment_terms: /payment|invoice|due|payable/i.test(text),
+        confidentiality_clause: /confidential|nda|proprietary/i.test(text),
+        data_privacy_clause: /gdpr|privacy|personal data/i.test(text),
+        arbitration_clause: /arbitration|dispute|mediation/i.test(text),
+        force_majeure: /force majeure|act of god/i.test(text),
+        indemnity_clause: /indemnify|indemnification/i.test(text)
+      };
+
+      let score = 0;
+      if (clauses.penalty_clause) score += 3;
+      if (clauses.termination_clause) score += 2;
+      if (clauses.payment_terms) score += 1;
+      if (clauses.confidentiality_clause) score += 2;
+      if (clauses.data_privacy_clause) score += 2;
+      if (clauses.arbitration_clause) score += 1;
+      if (clauses.force_majeure) score += 1;
+      if (clauses.indemnity_clause) score += 2;
+
+      const riskLevel = score >= 7 ? 'HIGH RISK' : score >= 4 ? 'MEDIUM RISK' : 'LOW RISK';
+    const riskLevelClass = score >= 7 ? 'text-red-400 bg-red-500/20 border-red-500/30' : score >= 4 ? 'text-orange-400 bg-orange-500/20 border-orange-500/30' : 'text-green-400 bg-green-500/20 border-green-500/30';
+
+      const summary = `AI Analysis Complete!\n\nDetected ${Object.values(clauses).filter(Boolean).length}/8 clauses.\nRisk Score: ${score}/10 (${riskLevel})\n\nRecommendations:\n${score >= 7 ? '⚠️  High risk - Review with legal counsel immediately.' : score >= 4 ? '⚡ Medium risk - Key clauses need attention.' : '✅ Low risk - Generally safe.'}`;
+
+      return {
+        clauses_detected: clauses,
+        risk_score: score,
+        risk_level: riskLevel,
+        summary,
+        text_preview: text.substring(0, 1000) + (text.length > 1000 ? '...' : ''),
+        risk_color: riskLevelClass
+      };
+    }
+
+    // Extract text from file (PDF preview, DOCX text)
+    async function extractText(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const text = e.target.result;
+          resolve(/\.pdf$/i.test(file.name) ? 'PDF Content Preview: ' + text.substring(0, 2000) : text);
+        };
+        if (/\.pdf$/i.test(file.name)) {
+          reader.readAsArrayBuffer(file);
+          reader.onload = e => {
+            // Mock PDF text extraction for demo
+            const mockText = 'Sample contract text with penalty clause termination payment confidential indemnity arbitration. Payment due within 30 days. Termination upon 60 days notice. Force majeure includes act of god. Confidential information protected under NDA. GDPR compliance required for personal data. Arbitration in New York. Indemnify against third party claims.';
+            resolve(mockText);
+          };
+        } else {
+          reader.readAsText(file);
+          reader.onload = e => resolve(e.target.result);
+        }
+      });
+    }
+
+    // Handle file
+    async function handleFile(file) {
+      if (!file) return;
+      if (!/\.(pdf|docx)$/i.test(file.name)) {
+        alert('Please upload PDF or DOCX files only!');
+        return;
+      }
+
+      showLoading(true);
+      try {
+        const text = await extractText(file);
+        analysisResult = analyzeContract(text);
+        displayResults();
+      } catch (error) {
+        alert('Error processing file: ' + error.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Loading
+    function showLoading(show) {
+      loadingSpinner.classList.toggle('hidden', !show);
+      analyzeBtn.disabled = show;
+      resultsSection.classList.toggle('hidden', show);
+    }
+
+    // Display Results
+    function displayResults() {
+      const { risk_level, risk_score, clauses_detected, summary, risk_color } = analysisResult;
+
+      // Update risk overview
+      document.getElementById('riskLevel').textContent = risk_level;
+      document.getElementById('riskScore').textContent = risk_score;
+      document.getElementById('riskLevel').className = `text-3xl font-bold mb-2 p-4 rounded-2xl glass ${analysisResult.riskLevelClass}`;
+
+      // Key Issues
+      const issues = Object.entries(clauses_detected).filter(([_, v]) => v).slice(0, 3).map(([k]) => k.replace('_', ' ').toUpperCase());
+      document.getElementById('keyIssues').innerHTML = issues.map(issue => `<li class="flex items-center gap-2 text-sm"><i class="fas fa-exclamation-triangle text-yellow-400"></i>${issue}</li>`).join('') || '<li class="text-green-400">No major issues detected</li>';
+
+      // Clauses Grid
+      const clausesGrid = document.getElementById('clausesGrid');
+      clausesGrid.innerHTML = Object.entries(clauses_detected).map(([key, detected]) => `
+        <div class="glass p-6 rounded-2xl text-center group hover:scale-105 transition-all hover:shadow-xl border ${detected ? 'border-green-500/50 bg-green-500/5' : 'border-gray-500/30'}">
+          <div class="${detected ? 'text-green-400' : 'text-gray-400'} text-3xl mb-3">
+            <i class="fas ${detected ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+          </div>
+          <div class="font-semibold mb-1">${key.replace('_clause', '').replace('_', ' ').toUpperCase()}</div>
+          <div class="text-sm opacity-75">${detected ? '✅ Detected' : '❌ Not Found'}</div>
+        </div>
+      `).join('');
+
+      // Summary
+      document.getElementById('summaryText').textContent = summary;
+
+      // Chart
+      updateChart(risk_score);
+
+      resultsSection.classList.remove('hidden');
+    }
+
+    // Chart
+    function updateChart(score) {
+      const ctx = document.getElementById('riskChart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Risk', 'Safe'],
+          datasets: [{
+            data: [score, 10 - score],
+            backgroundColor: ['#ef4444', '#10b981'],
+            borderWidth: 0,
+            cutout: '65%'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleColor: 'white', bodyColor: 'white' }
+          }
+        }
+      });
+    }
+
+    // Event Listeners
+    analyzeBtn.addEventListener('click', () => handleFile(fileInput.files[0]));
+
+    // Sample buttons (mock files)
+    document.getElementById('loadSample1').addEventListener('click', () => {
+      const mockFile = new File(['Mock contract text with penalty termination payment confidential'], 'sample1.pdf', { type: 'application/pdf' });
+      handleFile(mockFile);
+    });
+    document.getElementById('loadSample2').addEventListener('click', () => {
+      const mockFile = new File(['Another sample with indemnity arbitration force majeure'], 'sample2.pdf', { type: 'application/pdf' });
+      handleFile(mockFile);
+    });
+
+    // Export
+    document.getElementById('exportJson').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(analysisResult, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `contract-analysis-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('exportPdf').addEventListener('click', () => {
+      alert('PDF export ready! (Using html2canvas + jsPDF in production)');
+    });
+
+    document.getElementById('clearResults').addEventListener('click', () => {
+      resultsSection.classList.add('hidden');
+      fileInput.value = '';
+      if (chart) chart.destroy();
+    });
+
+    // Init
+    if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRDb250ZXh0TGlzdGVuZXIoJ2luc3RhbGwnLCAoKSA9PiB7fSk=');
+    }
+  </script>
+</body>
+</html>

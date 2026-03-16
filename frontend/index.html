@@ -1,75 +1,12 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<title>AI Smart Contract Analyzer</title>
-
-<style>
-
-body{
-font-family:Segoe UI;
-background:#0f172a;
-color:white;
-text-align:center;
-}
-
-.container{
-margin-top:100px;
-}
-
-.upload-box{
-border:2px dashed #38bdf8;
-padding:40px;
-border-radius:10px;
-width:400px;
-margin:auto;
-cursor:pointer;
-}
-
-button{
-margin-top:20px;
-padding:10px 25px;
-border:none;
-background:#38bdf8;
-color:white;
-border-radius:8px;
-cursor:pointer;
-}
-
-.loader{
-margin-top:20px;
-display:none;
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Contract Analyzer Pro</title>
 </head>
-
 <body>
-
-<div class="container">
-
-<h1>AI Smart Contract Analyzer</h1>
-
-<div class="upload-box" onclick="document.getElementById('fileInput').click()">
-
-<p>Drag & Drop Contract or Click to Upload</p>
-
-<input type="file" id="fileInput" hidden>
-
-</div>
-
-<button onclick="uploadContract()">Analyze Contract</button>
-
-<div class="loader" id="loader">
-AI analyzing contract...
-</div>
-
-</div>
-
-<script src="js/script.js"></script>
-
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
-
 </html>

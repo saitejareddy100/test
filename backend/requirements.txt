@@ -1,5 +1,17 @@
 flask
+flask-cors
 pdfplumber
 pandas
 numpy
 scikit-learn
+spacy
+flask-sqlalchemy
+flask-jwt-extended
+flask-limiter==3.5.0
+python-multipart
+python-docx
+python-dotenv
+pytest
+gunicorn
+alembic
+
